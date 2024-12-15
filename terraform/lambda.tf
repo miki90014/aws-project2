@@ -4,40 +4,15 @@ resource "aws_sqs_queue" "message_queue" {
   message_retention_seconds = 86400
 }
 
-resource "aws_iam_role" "lambda_execution_role" {
-  name = "lambda-execution-role"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_policy_attachment" "lambda_policy_attach" {
-  name       = "lambda-policy-attach"
-  roles      = [aws_iam_role.lambda_execution_role.name]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
 resource "aws_lambda_function" "message_processor" {
   filename         = "function.zip"
   function_name    = "message_processor"
-  role             = aws_iam_role.lambda_execution_role.arn
+  role             = "arn:aws:iam::919571953845:role/LabRole"
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.8"
   timeout          = 10
   memory_size      = 128
+  publish = true
 
   environment {
     variables = {
@@ -60,8 +35,8 @@ resource "aws_lambda_function_event_invoke_config" "lambda_config" {
   maximum_event_age_in_seconds = 60
 }
 
-resource "aws_lambda_provisioned_concurrency_config" "concurrency" {
+/*resource "aws_lambda_provisioned_concurrency_config" "concurrency" {
   function_name          = aws_lambda_function.message_processor.function_name
-  qualifier              = "$LATEST"
+  qualifier              = aws_lambda_function.message_processor.version
   provisioned_concurrent_executions = 2
-}
+}*/

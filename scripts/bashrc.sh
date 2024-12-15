@@ -1,5 +1,5 @@
 export GITHUB_OWNER="miki90014"
-export GITHUB_REPO="aws-project"
+export GITHUB_REPO="aws-project2"
 export FRONTEND_PORT=3000
 export BACKEND_PORT=5000
 export EXPOSED_FRONTEND_PORT=80

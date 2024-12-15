@@ -9,7 +9,7 @@ resource "aws_lambda_function" "message_processor" {
   function_name    = "message_processor"
   role             = "arn:aws:iam::919571953845:role/LabRole"
   handler          = "lambda_function.lambda_handler"
-  runtime          = "python3.8"
+  runtime          = "python3.10"
   timeout          = 10
   memory_size      = 128
   publish = true
@@ -35,8 +35,8 @@ resource "aws_lambda_function_event_invoke_config" "lambda_config" {
   maximum_event_age_in_seconds = 60
 }
 
-/*resource "aws_lambda_provisioned_concurrency_config" "concurrency" {
+resource "aws_lambda_provisioned_concurrency_config" "concurrency" {
   function_name          = aws_lambda_function.message_processor.function_name
-  qualifier              = aws_lambda_function.message_processor.version
+  qualifier              = 7
   provisioned_concurrent_executions = 2
-}*/
+}

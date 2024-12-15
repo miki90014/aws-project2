@@ -6,10 +6,11 @@ def lambda_handler(event, context):
     for record in event['Records']:
         try:
             message_body = record['body']
-            token = record['messageAttributes']['Token']['StringValue']
-            backend_url = record['messageAttributes']['URL']['StringValue']
+            token = record['messageAttributes']['Token']['stringValue']
+            backend_url = record['messageAttributes']['URL']['stringValue']
         except Exception as ex:
-            print("Error: {ex}")
+            print(record)
+            print(f"Error: {ex}")
             continue
         
         time.sleep(30)

@@ -237,22 +237,23 @@ def send_message():
             return jsonify({"error": "Message and reciever cannot be null"}), 400
         logger.info(f"Saving send message {message} send by {username} to {reciever}")
         try:
-            _ = sqs_client.send_message(
+            response = sqs_client.send_message(
                 QueueUrl=sqs_url,
                 MessageBody=message,
                 MessageAttributes={
-                    'Token': {
-                        'StringValue': access_token,
-                        'DataType': 'String'
+                    "Token": {
+                        "StringValue": access_token,
+                        "DataType": 'String'
                     },
-                    'URL': {
-                        'StringValue': backend_url,
-                        'DataType': 'String'
+                    "URL": {
+                        "StringValue": backend_url,
+                        "DataType": 'String'
                     }
                 }
             )
+            logger.info(f"Message sent to SQS. Message ID: {response['MessageId']}")
         except Exception as ex:
-            logger.info(f"Somthing gone wrong with SQS: {ex}")
+            logger.info(f"Something has gone wrong with SQS: {ex}")
         db_handler.insert_message(username, message, reciever)
         return jsonify({"message": "Message sent successfully"})
     except Exception as e:

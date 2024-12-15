@@ -4,9 +4,13 @@ import requests
 
 def lambda_handler(event, context):
     for record in event['Records']:
-        message_body = record['body']
-        token = record['messageAttributes']['Token']['stringValue']
-        backend_url = record['messageAttributes']['URL']['stringValue']
+        try:
+            message_body = record['body']
+            token = record['messageAttributes']['Token']['StringValue']
+            backend_url = record['messageAttributes']['URL']['StringValue']
+        except Exception as ex:
+            print("Error: {ex}")
+            continue
         
         time.sleep(30)
         

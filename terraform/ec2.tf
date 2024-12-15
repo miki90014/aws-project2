@@ -35,6 +35,8 @@ resource "aws_instance" "proj_ec2_backend" {
     echo "export COGNITO_POOL_ID=${aws_cognito_user_pool.user_pool.id}" >> /home/ubuntu/.bashrc
     echo "export COGNITO_CLIENT_ID=${aws_cognito_user_pool_client.cognito_client.id}" >> /home/ubuntu/.bashrc
     echo "export DATABASE_URL=${aws_db_instance.db.endpoint}" >> /home/ubuntu/.bashrc
+    echo "export BACKEND_SERVICE=${aws_instance.proj_ec2_backend.public_ip}" >> /home/ubuntu/.bashrc
+    echo "export QUEUE_URL=${aws_sqs_queue.message_queue.id}" >> /home/ubuntu/.bashrc
     source /home/ubuntu/.bashrc
     /home/ubuntu/build.sh
 

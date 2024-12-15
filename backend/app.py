@@ -22,6 +22,8 @@ rooms_details = {}
 region = os.getenv('AWS_REGION')
 app_client_id = os.getenv('COGNITO_CLIENT_ID')
 user_pool_id = os.getenv('COGNITO_POOL_ID')
+sqs_url = os.getenv('QUEUE_URL')
+backend_url = os.getenv('BACKEND_SERVICE')
 
 db_handler = DatabaseHandler()
 
@@ -29,6 +31,7 @@ db_handler = DatabaseHandler()
 
 cognito_client = boto3.client('cognito-idp',
                               region_name=region)
+sqs_client = boto3.client('sqs', region_name=region)
 
 def get_jwk(jwks_url):
     jwks = requests.get(jwks_url).json()
@@ -233,6 +236,23 @@ def send_message():
         if message is None or reciever is None:
             return jsonify({"error": "Message and reciever cannot be null"}), 400
         logger.info(f"Saving send message {message} send by {username} to {reciever}")
+        try:
+            _ = sqs_client.send_message(
+                QueueUrl=sqs_url,
+                MessageBody=message,
+                MessageAttributes={
+                    'Token': {
+                        'StringValue': access_token,
+                        'DataType': 'String'
+                    },
+                    'URL': {
+                        'StringValue': backend_url,
+                        'DataType': 'String'
+                    }
+                }
+            )
+        except Exception as ex:
+            logger.info(f"Somthing gone wrong with SQS: {ex}")
         db_handler.insert_message(username, message, reciever)
         return jsonify({"message": "Message sent successfully"})
     except Exception as e:

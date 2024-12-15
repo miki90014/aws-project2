@@ -2,7 +2,7 @@
 set +x
 
 source .bashrc
-git clone https://github.com/$GITHUB_OWNER/$GITHUB_REPO $WORKSPACE
+git clone --branch dev --single-branch https://github.com/$GITHUB_OWNER/$GITHUB_REPO $WORKSPACE
 sed -i "s/ENV BACKEND_PORT=.*/ENV BACKEND_PORT=$BACKEND_PORT/" $WORKSPACE/backend/Dockerfile
 sed -i "s/ENV AWS_REGION=.*/ENV AWS_REGION=$AWS_REGION/" $WORKSPACE/backend/Dockerfile
 sed -i "s/ENV COGNITO_POOL_ID=.*/ENV COGNITO_POOL_ID=$COGNITO_POOL_ID/" $WORKSPACE/backend/Dockerfile

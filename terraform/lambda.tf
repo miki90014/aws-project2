@@ -48,7 +48,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_messages_waiting" {
   period                    = 60
   metric_name               = "NumberOfMessagesSent"
   namespace                 = "AWS/SQS"
-  statistic                 = "Average"
+  statistic                 = "Sum"
   threshold                 = 3
   alarm_description         = "Alarm when SQS message count exceeds 3"
   actions_enabled           = true

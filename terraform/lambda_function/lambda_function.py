@@ -13,7 +13,7 @@ def lambda_handler(event, context):
             print(f"Error: {ex}")
             continue
         
-        time.sleep(30)
+        time.sleep(10)
         
         print(f"Otrzymano wiadomość: {message_body}")
         

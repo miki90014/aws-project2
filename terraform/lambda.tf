@@ -57,13 +57,3 @@ resource "aws_cloudwatch_metric_alarm" "sqs_messages_waiting" {
     QueueName = aws_sqs_queue.message_queue.name
   }
 }
-
-resource "aws_sns_topic" "alarm_topic" {
-  name = "AlarmTopic"
-}
-
-resource "aws_sns_topic_subscription" "email_subscription" {
-  topic_arn = aws_sns_topic.alarm_topic.arn
-  protocol  = "email"
-  endpoint  = "tinusia09@gmail.com"
-}
